@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .hero-typing {
+  text-align: center;
+  padding: 30px 15px;
+}
+
+.hero-title {
+  font-size: 28px;         /* change as needed */
+  font-weight: 600;
+  color: #2b2b2b;
+  margin: 0;
+}
+
+#type-text {
+  white-space: nowrap;
+  display: inline-block;
+  min-width: 260px;       /* reserve space to reduce layout jump */
+}
+
+/* blinking cursor */
+.cursor {
+  display: inline-block;
+  margin-left: 4px;
+  animation: blink 0.8s steps(1) infinite;
+  color: #e35d6a;         /* cursor color - change if needed */
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+  </style>
+</head>
+<body>
+  <!-- Typing Hero -->
+<div class="hero-typing">
+  <h1 class="hero-title">Welcome — <span id="type-text" aria-live="polite"></span><span class="cursor">|</span></h1>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const phrases = [
+    "And I’m a Bridal Mehndi Designer.",
+    "And I’m a Professional Henna Artist."
+  ];
+
+  const el = document.getElementById('type-text');
+  const TYPING_SPEED = 70;      // ms per character while typing
+  const DELETING_SPEED = 40;    // ms per character while deleting
+  const PAUSE_AFTER_TYPE = 1400; // ms to wait after full phrase typed
+  const PAUSE_AFTER_DELETE = 300; // ms to wait after deleting
+
+  let phraseIndex = 0;
+  let charIndex = 0;
+  let isDeleting = false;
+
+  function typeLoop() {
+    const current = phrases[phraseIndex];
+    if (!isDeleting) {
+      // Type
+      el.textContent = current.substring(0, charIndex + 1);
+      charIndex++;
+      if (charIndex === current.length) {
+        // done typing; pause then start deleting
+        setTimeout(() => { isDeleting = true; typeLoop(); }, PAUSE_AFTER_TYPE);
+        return;
+      }
+      setTimeout(typeLoop, TYPING_SPEED);
+    } else {
+      // Deleting
+      el.textContent = current.substring(0, charIndex - 1);
+      charIndex--;
+      if (charIndex === 0) {
+        // done deleting; move to next phrase
+        isDeleting = false;
+        phraseIndex = (phraseIndex + 1) % phrases.length;
+        setTimeout(typeLoop, PAUSE_AFTER_DELETE);
+        return;
+      }
+      setTimeout(typeLoop, DELETING_SPEED);
+    }
+  }
+
+  // start after small delay
+  setTimeout(typeLoop, 400);
+});
+</script>
+
+</body>
+</html>
